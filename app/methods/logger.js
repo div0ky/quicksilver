@@ -14,4 +14,8 @@ export class Logger {
     success(message) {
         console.log(chalk.green(message));
     }
+
+    warn(message) {
+        console.warn(chalk.yellow(message));
+    }
 }

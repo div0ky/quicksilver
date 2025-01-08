@@ -30,14 +30,22 @@ function testConfig() {
   console.log("Final config:", config.settings);
 }
 
-app
-  .command("list")
-  .description("List all branches")
-  .action(() => listBranches());
-
+// ===============================================
+//                  List Branches                  
+// ===============================================
+app.command("list").description("List all branches").action(() => listBranches());
+// ===============================================
+//                   Test Config                   
+// ===============================================
 app.command("test").description("Test Config File").action(testConfig);
-
+// ===============================================
+//                   Save Changes                   
+// ===============================================
 app.command("save").description("Commit uncommitted changes").action(() => branch.save());
+// ===============================================
+//                     Abandon                     
+// ===============================================
+app.command("abandon").description("Abandon this branch").action(() => branch.abandonChanges())
 
 // Make 'quick' the default command that shows help
 app

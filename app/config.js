@@ -28,6 +28,11 @@ export class Config {
         return JSON.parse(config_content);
     }
 
+    init() {
+        const config = { setup: true, main_branch: 'main', setup_date: new Date().toISOString() };
+        this.save(config);
+    }
+
     get settings() {
         return this._settings;
     }
