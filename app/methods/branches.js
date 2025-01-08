@@ -28,29 +28,52 @@ export class BranchManager {
   }
 
   push(branch) {
-    const exists = this.remoteExists();
+    try {
+      const exists = this.remoteExists();
 
-    if (exists) {
-      this.spinner.start(chalk.blue(`Force pushing changes to ${branch}...`));
-      execCommand(`git push --force origin ${branch}`);
-    } else {
-      this.spinner.start(chalk.blue(`Pushing to new remote for ${branch}...`));
-      execCommand(`git push -u origin ${branch}`);
+      if (exists) {
+        this.spinner.start(chalk.blue(`Force pushing changes to ${branch}...`));
+        execCommand(`git push --force origin ${branch}`);
+      } else {
+        this.spinner.start(chalk.blue(`Pushing to new remote for ${branch}...`));
+        execCommand(`git push -u origin ${branch}`);
+      }
+
+      this.spinner.success(chalk.green(`Push to ${branch} is done!`));
+    } catch (error) {
+      this.spinner.error(chalk.red("Uh oh. We failed to push!"));
     }
-
-    this.spinner.success(chalk.green(`Push to ${branch} is done!`));
   }
 
   remoteExists(branch) {
-    this.spinner.start(chalk.blue("Seeing if remote branch exists..."));
-    const response = execCommand(`git ls-remote --heads origin ${branch}`).trim();
-    this.spinner.success(chalk.green("Remote branch found!"));
-    return response !== "";
+    try {
+      this.spinner.start(chalk.blue("Seeing if remote branch exists..."));
+      const response = execCommand(`git ls-remote --heads origin ${branch}`).trim();
+      this.spinner.success(chalk.green("Remote branch found!"));
+      return response !== "";
+    } catch (error) {
+      this.spinner.error(chalk.red("Uh oh. Something went wrong."));
+    }
   }
 
   stageChanges() {
-    this.spinner.start(chalk.blue("Staging changes..."));
-    execCommand("git add .");
-    this.spinner.success(chalk.green("Staging changes... done!"));
+    try {
+      this.spinner.start(chalk.blue("Staging changes..."));
+      execCommand("git add .");
+      this.spinner.success(chalk.green("Staging changes... done!"));
+    } catch (error) {
+      this.spinner.error(chalk.red("Staging changes... failed!"));
+    }
+  }
+
+  stash(message = "QuickSilver: Temporary Stash") {
+    try {
+      this.spinner.start(chalk.blue("Stashing uncommmitted changes..."));
+      execCommand(`git stash push -m "${message}"`);
+      this.spinner.success(chalk.green("Stashing uncommmitted changes... done!"));
+      return true;
+    } catch (error) {
+      this.spinner.error(chalk.red("Failed to stash changes!"));
+    }
   }
 }
