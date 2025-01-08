@@ -21,7 +21,8 @@ export class BranchManager {
     execCommand('git commit -m "."');
     this.spinner.success("Commiting changes... done!");
 
-    this.push();
+    const current_branch = this.currentBranch();
+    this.push(current_branch);
   }
 
   currentBranch() {
