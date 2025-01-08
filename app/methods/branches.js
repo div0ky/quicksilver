@@ -22,7 +22,7 @@ export class BranchManager {
     this.spinner.success("Commiting changes... done!");
 
     const current_branch = this.currentBranch();
-    this.push(current_branch);
+    this.git.push(current_branch);
   }
 
   currentBranch() {
