@@ -20,6 +20,8 @@ export class BranchManager {
     this.stageChanges();
     execCommand('git commit -m "."');
     this.spinner.success("Commiting changes... done!");
+
+    this.push();
   }
 
   currentBranch() {
