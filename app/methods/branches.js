@@ -45,6 +45,7 @@ export class BranchManager {
 
       this.spinner.success(`Push to ${branch} is done!`);
     } catch (error) {
+      this.logger.error(error);
       this.spinner.error("Uh oh. We failed to push!");
     }
   }
