@@ -1,0 +1,38 @@
+{
+  "name": "@div0ky/quicksilver",
+  "displayName": "QuickSilver",
+  "version": "0.0.1",
+  "main": "index.js",
+  "bin": {
+    "quick": "index.js",
+    "quicksilver": "index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "utilities",
+    "api",
+    "git",
+    "git-flow",
+    "workflow"
+  ],
+  "author": "div0ky",
+  "license": "MIT",
+  "description": "CLI tool for modified Git-Flow with a linear history",
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "chalk": "^5.3.0",
+    "chalk-animation": "^2.0.3",
+    "commander": "^12.1.0",
+    "inquirer": "^11.1.0",
+    "nanospinner": "^1.1.0",
+    "open": "^9.1.0",
+    "openai": "4.75.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.3"
+  }
+}
