@@ -30,7 +30,7 @@ export class BranchManager {
 
   push(branch) {
     try {
-      const has_changes = this.uncommittedChanges();
+      const has_changes = this.git.uncommittedChanges();
       if (has_changes) this.stageChanges();
 
       const exists = this.remoteExists();
@@ -106,28 +106,6 @@ export class BranchManager {
     } catch (error) {
       this.spinner.error("Failed to stash changes!");
     }
-  }
-
-  abandonChanges() {
-    const { discard } = inquirer
-      .prompt([
-        {
-          type: "confirm",
-          name: "discard",
-          message: "Are you sure you want to discard all changes?",
-          default: false,
-        },
-      ])
-      .then((answers) => {
-        if (answers.discard) {
-          this.spinner.start("Discarding all changes...");
-          execCommand("git reset --hard HEAD");
-          execCommand("git clean -fd");
-          this.spinner.success("All changes have been discarded.");
-        } else {
-          this.logger.log("Operation cancelled. No changes were discarded.");
-        }
-      });
   }
 
   abandon() {

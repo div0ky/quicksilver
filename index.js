@@ -4,9 +4,11 @@ import { app, execCommand } from "./app/app.js";
 import chalk from "chalk";
 import { Config } from "./app/config.js";
 import { BranchManager } from "./app/methods/branches.js";
+import { GitManager } from "./app/methods/git.js";
 
 const config = new Config();
 const branch = new BranchManager();
+const git = new GitManager
 
 function listBranches() {
   const output = execCommand("git branch");
@@ -45,7 +47,7 @@ app.command("save").description("Commit uncommitted changes").action(() => branc
 // ===============================================
 //                     Abandon                     
 // ===============================================
-app.command("abandon").description("Abandon this branch").action(() => branch.abandonChanges())
+app.command("abandon").description("Abandon this branch").action(async () => await git.abandonChanges())
 
 // Make 'quick' the default command that shows help
 app
