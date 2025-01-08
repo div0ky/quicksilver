@@ -20,7 +20,7 @@ export class BranchManager {
     this.spinner.start(chalk.blue("Commiting changes..."));
     this.stageChanges();
     execCommand('git commit -m "."');
-    this.spinner.success(chalk.green("Done!"));
+    this.spinner.success(chalk.green("Commiting changes... done!"));
   }
 
   currentBranch() {
@@ -38,7 +38,7 @@ export class BranchManager {
       execCommand(`git push -u origin ${branch}`);
     }
 
-    this.spinner.success(chalk.green("Done!"));
+    this.spinner.success(chalk.green(`Push to ${branch} is done!`));
   }
 
   remoteExists(branch) {
@@ -51,6 +51,6 @@ export class BranchManager {
   stageChanges() {
     this.spinner.start(chalk.blue("Staging changes..."));
     execCommand("git add .");
-    this.spinner.success(chalk.green("Done!"));
+    this.spinner.success(chalk.green("Staging changes... done!"));
   }
 }
