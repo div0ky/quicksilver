@@ -7,40 +7,6 @@ export class GitManager {
     this.spinner = new Spinner();
   }
 
-  /**
-   * Checks if there are any uncommitted changes in the Git repository.
-   * @returns {boolean} True if there are uncommitted changes, false otherwise.
-   */
-  hasChanges() {
-    const status = execCommand("git status --porcelain");
-    return status.trim().length > 0;
-  }
-
-  /**
-   * Prompts the user to confirm and then discards all uncommitted changes in the repository.
-   * This method resets the working directory to the last commit and removes untracked files.
-   * @returns {Promise<void>}
-   */
-  async abandonChanges() {
-    const { discard } = await inquirer.prompt([
-      {
-        type: "confirm",
-        name: "discard",
-        message: "Are you sure you want to discard all changes?",
-        default: false,
-      },
-    ]);
-
-    if (discard) {
-      this.spinner.start("Discarding all changes...");
-      execCommand("git reset --hard HEAD");
-      execCommand("git clean -fd");
-      this.spinner.success("All changes have been discarded.");
-    } else {
-      this.logger.log("Operation cancelled. No changes were discarded.");
-    }
-  }
-
   init() {
     try {
       if (this.check()) {
@@ -66,28 +32,6 @@ export class GitManager {
       return true;
     } catch (error) {
       return false;
-    }
-  }
-
-  push(branch) {
-    try {
-      const has_changes = this.hasChanges();
-      if (has_changes) this.stage();
-
-      const exists = this.remoteExists();
-
-      if (exists) {
-        this.spinner.start(`Force pushing changes to ${branch}...`);
-        execCommand(`git push --force origin ${branch}`);
-      } else {
-        this.spinner.start(`Pushing to new remote for ${branch}...`);
-        execCommand(`git push -u origin ${branch}`);
-      }
-
-      this.spinner.success(`Push to ${branch} is done!`);
-    } catch (error) {
-      this.logger.error(error);
-      this.spinner.error("Uh oh. We failed to push!");
     }
   }
 

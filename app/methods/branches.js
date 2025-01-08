@@ -12,7 +12,7 @@ export class BranchManager {
   }
 
   save() {
-    if (!this.git.hasChanges()) {
+    if (!this.haveChanges()) {
       this.logger.log("No changes to save.");
     }
 
@@ -64,5 +64,52 @@ export class BranchManager {
 
     execCommand(`git checkout -b ${branch}`);
     this.push();
+  }
+
+  push(branch) {
+    try {
+      const has_changes = this.haveChanges();
+      if (has_changes) this.stage();
+
+      const exists = this.remoteExists();
+
+      if (exists) {
+        this.spinner.start(`Force pushing changes to ${branch}...`);
+        execCommand(`git push --force origin ${branch}`);
+      } else {
+        this.spinner.start(`Pushing to new remote for ${branch}...`);
+        execCommand(`git push -u origin ${branch}`);
+      }
+
+      this.spinner.success(`Push to ${branch} is done!`);
+    } catch (error) {
+      this.logger.error(error);
+      this.spinner.error("Uh oh. We failed to push!");
+    }
+  }
+
+  haveChanges() {
+    const status = execCommand("git status --porcelain");
+    return status.trim().length > 0;
+  }
+
+  async reset() {
+    const { discard } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "discard",
+        message: "Are you sure you want to discard all unsaved changes?",
+        default: false,
+      },
+    ]);
+
+    if (discard) {
+      this.spinner.start("Discarding all unsaved changes...");
+      execCommand("git reset --hard HEAD");
+      execCommand("git clean -fd");
+      this.spinner.success("All unsaved changes have been discarded.");
+    } else {
+      this.logger.log("Operation cancelled. No changes were discarded.");
+    }
   }
 }
